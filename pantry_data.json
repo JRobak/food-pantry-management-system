@@ -1,0 +1,75 @@
+{
+  "inventory": [
+    {
+      "name": "Rice",
+      "category": "Grains",
+      "quantity": 40
+    },
+    {
+      "name": "Beans",
+      "category": "Canned Goods",
+      "quantity": 30
+    },
+    {
+      "name": "Pasta",
+      "category": "Grains",
+      "quantity": 10
+    },
+    {
+      "name": "Milk",
+      "category": "Dairy",
+      "quantity": 2
+    }
+  ],
+  "recipients": [
+    {
+      "name": "Alice Johnson",
+      "household_size": 4,
+      "notes": "",
+      "received_items": [
+        {
+          "item_name": "Rice",
+          "quantity": 5,
+          "timestamp": "2025-12-10T15:45:38"
+        },
+        {
+          "item_name": "Rice",
+          "quantity": 5,
+          "timestamp": "2025-12-10T16:01:01"
+        }
+      ]
+    },
+    {
+      "name": "Marcus Smith",
+      "household_size": 2,
+      "notes": "",
+      "received_items": []
+    },
+    {
+      "name": "Brent",
+      "household_size": 2,
+      "notes": "Works but is struggling to support his disabled mother, so we will help them.",
+      "received_items": [
+        {
+          "item_name": "Milk",
+          "quantity": 1,
+          "timestamp": "2025-12-10T16:04:31"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "recipient": "Alice Johnson",
+      "item": "Rice",
+      "quantity": 5,
+      "timestamp": "2025-12-10T16:01:01"
+    },
+    {
+      "recipient": "Brent",
+      "item": "Milk",
+      "quantity": 1,
+      "timestamp": "2025-12-10T16:04:31"
+    }
+  ]
+}
