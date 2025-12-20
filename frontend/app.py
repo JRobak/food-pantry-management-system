@@ -58,12 +58,30 @@ class PantryApp:
             "height": 1
         }
 
-        tk.Button(self.root, text="Add Donation / Item", command=self.open_add_item_screen, **btn_style).pack(pady=8)
-        tk.Button(self.root, text="Add Recipient", command=self.open_add_recipient_screen, **btn_style).pack(pady=8)
-        tk.Button(self.root, text="Record Distribution", command=self.open_distribution_screen, **btn_style).pack(pady=8)
-        tk.Button(self.root, text="View Inventory", command=self.open_inventory_screen, **btn_style).pack(pady=8)
-        tk.Button(self.root, text="View Distribution History", command=self.open_history_screen, **btn_style).pack(pady=8)
+        btn1 = tk.Button(self.root, text="Add Donation / Item", command=self.open_add_item_screen, **btn_style).pack(pady=8)
+        self.add_hover_effect(btn1, "#FF8C42", "#e6762f")
 
+        btn2 =tk.Button(self.root, text="Add Recipient", command=self.open_add_recipient_screen, **btn_style).pack(pady=8)
+        self.add_hover_effect(btn2, "#FF8C42", "#e6762f")
+
+        btn3 =tk.Button(self.root, text="Record Distribution", command=self.open_distribution_screen, **btn_style).pack(pady=8)
+        self.add_hover_effect(btn3, "#FF8C42", "#e6762f")
+
+        btn4 = tk.Button(self.root, text="View Inventory", command=self.open_inventory_screen, **btn_style).pack(pady=8)
+        self.add_hover_effect(btn4, "#FF8C42", "#e6762f")
+
+        btn5 = tk.Button(self.root, text="View Distribution History", command=self.open_history_screen, **btn_style).pack(pady=8)
+        self.add_hover_effect(btn5, "#FF8C42", "#e6762f")
+    
+    # reuseable hover effect for buttons
+    def add_hover_effect(self, widget, normal_bg, hover_bg):
+        def on_enter(e):
+            widget['background'] = hover_bg
+        def on_leave(e):
+            widget['background'] = normal_bg
+        
+        widget.bind("<Enter>", on_enter)
+        widget.bind("<Leave>", on_leave)
     
     # ADD ITEM
     
@@ -95,15 +113,18 @@ class PantryApp:
             quantity = quantity_entry.get()
 
             if not name or not category or not quantity.isdigit():
-                messagebox.showerror("Error", "Please enter valid item information.")
+                messagebox.showerror("Error", "Please enter valid item information!")
                 return
 
             self.system.add_item(name, category, int(quantity))
             messagebox.showinfo("Success", f"Added {quantity} units of {name}.")
             self.build_main_menu()
 
-        tk.Button(self.root, text="Add Item", bg="#FF8C42", fg="white", width=20, command=submit_item).pack(pady=10)
-        tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack()
+        btn1 = tk.Button(self.root, text="Add Item", bg="#FF8C42", fg="white", width=20, command=submit_item).pack(pady=10)
+        self.add_hover_effect(btn1, "#FF8C42", "#e6762f")
+
+        btn2 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack()
+        self.add_hover_effect(btn2, "#ccc", "#bbb")
 
     
     # ADD RECIPIENT
@@ -136,17 +157,19 @@ class PantryApp:
             notes = notes_entry.get()
 
             if not name or not size.isdigit():
-                messagebox.showerror("Error", "Please enter valid recipient information.")
+                messagebox.showerror("Error", "Please enter valid recipient information!")
                 return
 
             self.system.add_recipient(name, int(size), notes)
             messagebox.showinfo("Success", f"Recipient '{name}' added.")
             self.build_main_menu()
 
-        tk.Button(self.root, text="Add Recipient", bg="#FF8C42", fg="white",
+        btn1 = tk.Button(self.root, text="Add Recipient", bg="#FF8C42", fg="white",
                   width=20, command=submit_recipient).pack(pady=10)
-        tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack()
+        self.add_hover_effect(btn1, "#FF8C42", "#e6762f")
 
+        btn2 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack()
+        self.add_hover_effect(btn2, "#ccc", "#bbb")
     
     # VIEW INVENTORY
     
@@ -157,21 +180,44 @@ class PantryApp:
         self.root.configure(bg="#FFF7EE")
         tk.Label(self.root, text="Inventory List", font=("Segoe UI", 20, "bold"), bg="#FFF7EE", fg="#FF8C42").pack(pady=15)
 
+        # Scroll bar set up (
+
         frame = tk.Frame(self.root, bg="white")
         frame.pack(pady=10)
+
+        container = tk.Frame(self.root, bg="#FFF7EE") 
+        container.pack(fill="both", expand=True, padx=10, pady=10)
+
+        canvas = tk.Canvas(container, bg="white", highlightthickness=0)
+        canvas.pack(side="left", fill="both", expand=True)
+
+        scrollbar = tk.Scrollbar(container, orient="vertical", command=canvas.yview)
+        scrollbar.pack(side="right", fill="y")
+
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        scroll_frame = tk.Frame(canvas, bg="white")
+        canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
+
+        def update_scroll_region(event):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+
+        scroll_frame.bind("<Configure>", update_scroll_region)
+
+        # ) end scroll bar set up
 
         inventory = self.system.get_inventory()
 
         if not inventory:
-            tk.Label(frame, text="No items in inventory.", bg="white", font=("Segoe UI", 13)).pack(pady=10)
+            tk.Label(frame, text="No items are in inventory currently.", bg="white", font=("Segoe UI", 13)).pack(pady=10)
         else:
             for item in inventory:
                 tk.Label(frame,
                          text=f"{item.name} | {item.category} | {item.quantity} units",
                          bg="white", font=("Segoe UI", 13)).pack(pady=5)
 
-        tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack(pady=15)
-
+        btn = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack(pady=15)
+        self.add_hover_effect(btn, "#ccc", "#bbb")
   
     # RECORD DISTRIBUTION
     
@@ -190,7 +236,7 @@ class PantryApp:
         recipients = [r.name for r in self.system.recipients]
 
         if not recipients:
-            tk.Label(frame, text="No recipients found.", bg="white", fg="red").pack()
+            tk.Label(frame, text="No recipients were found.", bg="white", fg="red").pack()
             tk.Button(self.root, text="Back", bg="#ccc", command=self.build_main_menu).pack(pady=10)
             return
 
@@ -201,7 +247,7 @@ class PantryApp:
         items = [i.name for i in self.system.items]
 
         if not items:
-            tk.Label(frame, text="No items available.", bg="white", fg="red").pack()
+            tk.Label(frame, text="No items are currently available.", bg="white", fg="red").pack()
             tk.Button(self.root, text="Back", bg="#ccc", command=self.build_main_menu).pack(pady=10)
             return
 
@@ -218,7 +264,7 @@ class PantryApp:
             q = qty_entry.get()
 
             if not r or not i or not q.isdigit():
-                messagebox.showerror("Error", "All fields must be filled out correctly.")
+                messagebox.showerror("Error", "Please ensure that all fields are filled out correctly.")
                 return
 
             result = self.system.record_distribution(i, r, int(q))
@@ -229,10 +275,12 @@ class PantryApp:
             else:
                 messagebox.showerror("Error", result)
 
-        tk.Button(self.root, text="Record Distribution", bg="#FF8C42",
+        btn1 = tk.Button(self.root, text="Record Distribution", bg="#FF8C42",
                   fg="white", width=20, command=submit_distribution).pack(pady=10)
-        tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack(pady=10)
+        self.add_hover_effect(btn1, "#FF8C42", "#e6762f")
 
+        btn2 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack(pady=10)
+        self.add_hover_effect(btn2, "#ccc", "#bbb")
    
     # VIEW DISTRIBUTION HISTORY
     
@@ -258,7 +306,8 @@ class PantryApp:
                     bg="white", font=("Segoe UI", 13)
                 ).pack(pady=5)
 
-        tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack(pady=15)
+        btn1 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack(pady=15)
+        self.add_hover_effect(btn1, "#ccc", "#bbb")
 
 
 if __name__ == "__main__":
