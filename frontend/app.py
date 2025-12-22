@@ -17,13 +17,25 @@ class PantryApp:
         self.system = PantrySystem()
         self.build_main_menu()
 
+    def add_hover_effect(self, widget, normal_bg, hover_bg):
+        if widget is None:
+            return
+
+        def on_enter(e):
+            widget.configure(bg=hover_bg)
+
+        def on_leave(e):
+            widget.configure(bg=normal_bg)
+
+        widget.bind("<Enter>", on_enter)
+        widget.bind("<Leave>", on_leave)
+
     def build_main_menu(self):
         for widget in self.root.winfo_children():
             widget.destroy()
 
         self.root.configure(bg="#FFF7EE")
 
-        # Load Logo
         logo_path = os.path.join(os.path.dirname(__file__), "assets", "logo.png")
         if os.path.exists(logo_path):
             img = Image.open(logo_path)
@@ -32,7 +44,6 @@ class PantryApp:
         else:
             self.logo_photo = None
 
-        # Header: Logo and Title
         header = tk.Frame(self.root, bg="#FFF7EE")
         header.pack(pady=20)
 
@@ -47,7 +58,6 @@ class PantryApp:
             fg="#FF8C42"
         ).pack(side="left")
 
-        # Button Styling
         btn_style = {
             "font": ("Segoe UI", 13),
             "bg": "#FF8C42",
@@ -58,33 +68,26 @@ class PantryApp:
             "height": 1
         }
 
-        btn1 = tk.Button(self.root, text="Add Donation / Item", command=self.open_add_item_screen, **btn_style).pack(pady=8)
+        btn1 = tk.Button(self.root, text="Add Donation / Item", command=self.open_add_item_screen, **btn_style)
+        btn1.pack(pady=8)
         self.add_hover_effect(btn1, "#FF8C42", "#e6762f")
 
-        btn2 =tk.Button(self.root, text="Add Recipient", command=self.open_add_recipient_screen, **btn_style).pack(pady=8)
+        btn2 = tk.Button(self.root, text="Add Recipient", command=self.open_add_recipient_screen, **btn_style)
+        btn2.pack(pady=8)
         self.add_hover_effect(btn2, "#FF8C42", "#e6762f")
 
-        btn3 =tk.Button(self.root, text="Record Distribution", command=self.open_distribution_screen, **btn_style).pack(pady=8)
+        btn3 = tk.Button(self.root, text="Record Distribution", command=self.open_distribution_screen, **btn_style)
+        btn3.pack(pady=8)
         self.add_hover_effect(btn3, "#FF8C42", "#e6762f")
 
-        btn4 = tk.Button(self.root, text="View Inventory", command=self.open_inventory_screen, **btn_style).pack(pady=8)
+        btn4 = tk.Button(self.root, text="View Inventory", command=self.open_inventory_screen, **btn_style)
+        btn4.pack(pady=8)
         self.add_hover_effect(btn4, "#FF8C42", "#e6762f")
 
-        btn5 = tk.Button(self.root, text="View Distribution History", command=self.open_history_screen, **btn_style).pack(pady=8)
+        btn5 = tk.Button(self.root, text="View Distribution History", command=self.open_history_screen, **btn_style)
+        btn5.pack(pady=8)
         self.add_hover_effect(btn5, "#FF8C42", "#e6762f")
-    
-    # reuseable hover effect for buttons
-    def add_hover_effect(self, widget, normal_bg, hover_bg):
-        def on_enter(e):
-            widget['background'] = hover_bg
-        def on_leave(e):
-            widget['background'] = normal_bg
-        
-        widget.bind("<Enter>", on_enter)
-        widget.bind("<Leave>", on_leave)
-    
-    # ADD ITEM
-    
+
     def open_add_item_screen(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -120,15 +123,14 @@ class PantryApp:
             messagebox.showinfo("Success", f"Added {quantity} units of {name}.")
             self.build_main_menu()
 
-        btn1 = tk.Button(self.root, text="Add Item", bg="#FF8C42", fg="white", width=20, command=submit_item).pack(pady=10)
+        btn1 = tk.Button(self.root, text="Add Item", bg="#FF8C42", fg="white", width=20, command=submit_item)
+        btn1.pack(pady=10)
         self.add_hover_effect(btn1, "#FF8C42", "#e6762f")
 
-        btn2 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack()
+        btn2 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu)
+        btn2.pack()
         self.add_hover_effect(btn2, "#ccc", "#bbb")
 
-    
-    # ADD RECIPIENT
-   
     def open_add_recipient_screen(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -164,15 +166,14 @@ class PantryApp:
             messagebox.showinfo("Success", f"Recipient '{name}' added.")
             self.build_main_menu()
 
-        btn1 = tk.Button(self.root, text="Add Recipient", bg="#FF8C42", fg="white",
-                  width=20, command=submit_recipient).pack(pady=10)
+        btn1 = tk.Button(self.root, text="Add Recipient", bg="#FF8C42", fg="white", width=20, command=submit_recipient)
+        btn1.pack(pady=10)
         self.add_hover_effect(btn1, "#FF8C42", "#e6762f")
 
-        btn2 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack()
+        btn2 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu)
+        btn2.pack()
         self.add_hover_effect(btn2, "#ccc", "#bbb")
-    
-    # VIEW INVENTORY
-    
+
     def open_inventory_screen(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -180,31 +181,8 @@ class PantryApp:
         self.root.configure(bg="#FFF7EE")
         tk.Label(self.root, text="Inventory List", font=("Segoe UI", 20, "bold"), bg="#FFF7EE", fg="#FF8C42").pack(pady=15)
 
-        # Scroll bar set up (
-
         frame = tk.Frame(self.root, bg="white")
         frame.pack(pady=10)
-
-        container = tk.Frame(self.root, bg="#FFF7EE") 
-        container.pack(fill="both", expand=True, padx=10, pady=10)
-
-        canvas = tk.Canvas(container, bg="white", highlightthickness=0)
-        canvas.pack(side="left", fill="both", expand=True)
-
-        scrollbar = tk.Scrollbar(container, orient="vertical", command=canvas.yview)
-        scrollbar.pack(side="right", fill="y")
-
-        canvas.configure(yscrollcommand=scrollbar.set)
-
-        scroll_frame = tk.Frame(canvas, bg="white")
-        canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
-
-        def update_scroll_region(event):
-            canvas.configure(scrollregion=canvas.bbox("all"))
-
-        scroll_frame.bind("<Configure>", update_scroll_region)
-
-        # ) end scroll bar set up
 
         inventory = self.system.get_inventory()
 
@@ -212,22 +190,18 @@ class PantryApp:
             tk.Label(frame, text="No items are in inventory currently.", bg="white", font=("Segoe UI", 13)).pack(pady=10)
         else:
             for item in inventory:
-                tk.Label(frame,
-                         text=f"{item.name} | {item.category} | {item.quantity} units",
-                         bg="white", font=("Segoe UI", 13)).pack(pady=5)
+                tk.Label(frame, text=f"{item.name} | {item.category} | {item.quantity} units", bg="white", font=("Segoe UI", 13)).pack(pady=5)
 
-        btn = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack(pady=15)
+        btn = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu)
+        btn.pack(pady=15)
         self.add_hover_effect(btn, "#ccc", "#bbb")
-  
-    # RECORD DISTRIBUTION
-    
+
     def open_distribution_screen(self):
         for widget in self.root.winfo_children():
             widget.destroy()
 
         self.root.configure(bg="#FFF7EE")
-        tk.Label(self.root, text="Record Distribution", font=("Segoe UI", 20, "bold"),
-                 bg="#FFF7EE", fg="#FF8C42").pack(pady=15)
+        tk.Label(self.root, text="Record Distribution", font=("Segoe UI", 20, "bold"), bg="#FFF7EE", fg="#FF8C42").pack(pady=15)
 
         frame = tk.Frame(self.root, bg="white")
         frame.pack(pady=20)
@@ -269,44 +243,38 @@ class PantryApp:
 
             result = self.system.record_distribution(i, r, int(q))
 
-            if result == "SUCCESS":
+            if result:
                 messagebox.showinfo("Success", f"Gave {q} units of {i} to {r}.")
                 self.build_main_menu()
             else:
-                messagebox.showerror("Error", result)
+                messagebox.showerror("Error", "Not enough inventory.")
 
-        btn1 = tk.Button(self.root, text="Record Distribution", bg="#FF8C42",
-                  fg="white", width=20, command=submit_distribution).pack(pady=10)
+        btn1 = tk.Button(self.root, text="Record Distribution", bg="#FF8C42", fg="white", width=20, command=submit_distribution)
+        btn1.pack(pady=10)
         self.add_hover_effect(btn1, "#FF8C42", "#e6762f")
 
-        btn2 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack(pady=10)
+        btn2 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu)
+        btn2.pack(pady=10)
         self.add_hover_effect(btn2, "#ccc", "#bbb")
-   
-    # VIEW DISTRIBUTION HISTORY
-    
+
     def open_history_screen(self):
         for widget in self.root.winfo_children():
             widget.destroy()
 
         self.root.configure(bg="#FFF7EE")
-        tk.Label(self.root, text="Distribution History", font=("Segoe UI", 20, "bold"),
-                 bg="#FFF7EE", fg="#FF8C42").pack(pady=15)
+        tk.Label(self.root, text="Distribution History", font=("Segoe UI", 20, "bold"), bg="#FFF7EE", fg="#FF8C42").pack(pady=15)
 
         frame = tk.Frame(self.root, bg="white")
         frame.pack(pady=10)
 
         if not self.system.history:
-            tk.Label(frame, text="No distribution records yet.",
-                     bg="white", font=("Segoe UI", 13)).pack(pady=10)
+            tk.Label(frame, text="No distribution records yet.", bg="white", font=("Segoe UI", 13)).pack(pady=10)
         else:
             for record in self.system.history:
-                tk.Label(
-                    frame,
-                    text=f"{record['recipient']} received {record['quantity']} of {record['item']}",
-                    bg="white", font=("Segoe UI", 13)
-                ).pack(pady=5)
+                tk.Label(frame, text=f"{record['recipient']} received {record['quantity']} of {record['item']}", bg="white", font=("Segoe UI", 13)).pack(pady=5)
 
-        btn1 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu).pack(pady=15)
+        btn1 = tk.Button(self.root, text="Back", bg="#ccc", width=15, command=self.build_main_menu)
+        btn1.pack(pady=15)
         self.add_hover_effect(btn1, "#ccc", "#bbb")
 
 
